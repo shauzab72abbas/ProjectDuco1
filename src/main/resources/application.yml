@@ -1,0 +1,51 @@
+server:
+  port: 9292
+
+
+
+spring:
+  application:
+#    sftpHost: ${SFTP_HOST}
+#    userName: ${SFTP_USERNAME}
+#    sftpCoupaPassword: ${SFTP_PASSWORD}
+#    sftpPort: ${SFTP_PORT}
+    sftpHost: ${SFTP_HOST:localhost}
+    userName: ${SFTP_USERNAME:foo}
+    sftpCoupaPassword: ${SFTP_PASSWORD:pass}
+    sftpPort: ${SFTP_PORT:22}
+    remoteDir: ${SFTP_REMOTEDIRECTORY:/upload/Incoming/Suppliers}
+    privateKey: src/main/resources/keys/sftp_rsa.ppk
+    sftpCoupaFile: _Supplier_OFI.csv
+    coupaDateFormat: yyMMddHHmmss_SSS
+    maxAttempts: 4
+    delayRetry: 5000
+
+kafka-consumer-data:
+  bootstrapServers: ${KAFKA_BOOTSTRAPSERVERS:localhost:9092}
+  algorithm: http
+  protocol: PLAINTEXT #SASL_SSL
+  mechanism: PLAIN
+  jaasConfig: ${KAFKA_JAASCONFIG}
+  registerSchema: false
+  compatibility: false
+  latestVersion: true
+  invalidSchema: true
+  maxAttempts: 4
+  maxPollIntervalMs: 900000
+  maxPollRecords: 500
+  retryBackOffMsConfig: 20000
+  replicationFactor: 1
+  reconnectBackoffMs: 60000
+  keyDeserializer: StringDeserializer
+  valueDeserializer: StringDeserializer
+  autoOffset: false
+  batchListener: true
+  autoStartup: false
+  sessionTimeOut: 10000
+  heartbeatIntervalMs: 3000
+  pollTimeOutMs: 150
+  coupaSuppliersTopicName: ${KAFKA_TOPICNAME:twg.public.erp.supplier.supplier-core-to-be-discarded-v1}
+  coupaSuppliersGroupId: suppliers
+
+poEmailValidationRequired: false
+#poEmailValidationRequired: ${PO_EMAIL_VALIDATION_REQUIRED:false}

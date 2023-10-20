@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+    <profiles>
+        <profile>
+            <repositories>
+                <repository>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                    <releases>
+                        <enabled>true</enabled>
+                        <updatePolicy>daily</updatePolicy>
+                    </releases>
+                    <id>central</id>
+                    <name>central</name>
+                    <url>https://nexus-dev-aws.twg.co.nz/repository/maven-public</url>
+                </repository>
+            </repositories>
+            <id>warehouse</id>
+        </profile>
+    </profiles>
+    <activeProfiles>
+        <activeProfile>warehouse</activeProfile>
+    </activeProfiles>
+    <servers>
+        <server>
+            <username>developer-2023</username>
+            <password>Twi%sV6u&amp;VT4</password>
+            <id>central</id>
+        </server>
+    </servers>
+    <mirrors>
+        <mirror>
+            <id>central</id>
+            <name>use Nexus for all the things</name>
+            <url>https://nexus-dev-aws.twg.co.nz/repository/maven-public</url>
+            <mirrorOf>*</mirrorOf>
+        </mirror>
+    </mirrors>
+</settings>

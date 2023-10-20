@@ -1,0 +1,179 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$id": "https://thewarehousegroup.com/schemas/supplier-core.json",
+  "title": "suppliers-core",
+  "description": "SDEM for Suppliers",
+  "type": "object",
+  "properties": {
+    "suppliersData": {
+      "type": "object",
+      "required": [
+        "dataArea"
+      ],
+      "properties": {
+        "releaseIdentifier": {
+          "$ref": "#/definitions/string"
+        },
+        "applicationArea": {
+          "type": "object",
+          "properties": {
+            "creationDateTime": {
+              "$ref": "#/definitions/string"
+            }
+          }
+        },
+        "dataArea": {
+          "type": "object",
+          "required": [
+            "suppliers"
+          ],
+          "properties": {
+            "process": {
+              "$ref": "#/definitions/string"
+            },
+            "suppliers": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "required": [
+                  "supplierNumber",
+                  "name",
+                  "invoiceMatchingLevel"
+                ],
+                "properties": {
+                  "id": {
+                    "$ref": "#/definitions/string"
+                  },
+                  "supplierNumber": {
+                    "$ref": "#/definitions/requiredString"
+                  },
+                  "name": {
+                    "$ref": "#/definitions/requiredString"
+                  },
+                  "displayName": {
+                    "$ref": "#/definitions/string"
+                  },
+                  "supplierStatus": {
+                    "$ref": "#/definitions/string"
+                  },
+                  "primaryContact": {
+                    "type": "object",
+                    "properties": {
+                      "email": {
+                        "$ref": "#/definitions/string"
+                      },
+                      "mobile": {
+                        "$ref": "#/definitions/string"
+                      }
+                    }
+                  },
+                  "primaryAddress": {
+                    "type": "object",
+                    "properties": {
+                      "street1": {
+                        "$ref": "#/definitions/string"
+                      },
+                      "street2": {
+                        "$ref": "#/definitions/string"
+                      },
+                      "city": {
+                        "$ref": "#/definitions/string"
+                      },
+                      "state": {
+                        "$ref": "#/definitions/string"
+                      },
+                      "postalCode": {
+                        "$ref": "#/definitions/string"
+                      },
+                      "countryCode": {
+                        "$ref": "#/definitions/string"
+                      }
+                    }
+                  },
+                  "poDetails": {
+                    "type": "object",
+                    "required": [
+                      "poMethod"
+                    ],
+                    "properties": {
+                      "poEmail": {
+                        "$ref": "#/definitions/string"
+                      },
+                      "poMethod": {
+                        "$ref": "#/definitions/poMethodRequiredString"
+                      },
+                      "poChangeMethod": {
+                        "$ref": "#/definitions/string"
+                      }
+                    }
+                  },
+                  "paymentTerms": {
+                    "$ref": "#/definitions/string"
+                  },
+                  "nlgSupplierCode": {
+                    "$ref": "#/definitions/string"
+                  },
+                  "t7SupplierCode": {
+                    "$ref": "#/definitions/string"
+                  },
+                  "1daySupplierCode": {
+                    "$ref": "#/definitions/string"
+                  },
+                  "invoiceMatchingLevel": {
+                    "$ref": "#/definitions/requiredString"
+                  },
+                  "oracleSiteCode": {
+                    "$ref": "#/definitions/string"
+                  },
+                  "multiplePaySite": {
+                    "$ref": "#/definitions/string"
+                  },
+                  "taxCode": {
+                    "$ref": "#/definitions/string"
+                  },
+                  "coupaSupplierId": {
+                    "$ref": "#/definitions/string"
+                  },
+                  "marketSupplierCode": {
+                    "$ref": "#/definitions/string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "requiredString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "poMethodRequiredString": {
+      "type": "string"
+    },
+    "dateTime": {
+      "type": ["null", "string"],
+      "format": "date-time"
+    },
+    "string": {
+      "type": ["null", "string"]
+    },
+    "token": {
+      "type": ["null", "string"]
+    },
+    "decimal": {
+      "type": ["null", "number"]
+    },
+    "boolean": {
+      "type": ["null", "boolean"]
+    },
+    "email": {
+      "title": "Email Address",
+      "type": ["null", "string"],
+      "format": "email"
+    }
+  }
+}

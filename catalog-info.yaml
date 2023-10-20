@@ -1,0 +1,44 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: "erpfi-suppliers"
+  description: "erpfi-suppliers Java REST API"
+  annotations:
+    backstage.io/techdocs-ref: "url:https://bitbucket.org/twgnz/erpfi-suppliers.git"
+    jenkins.io/job-full-name: "erpfi-suppliers"
+    twg.co.nz/template-name: "do-goldenpath-spring-boot-rest-api-template"
+    twg.co.nz/created-datetime: "2021-10-14T21:30:44Z"
+  tags:
+    - java
+    - springboot
+    - template-2021-10-07
+  links:
+    - url: "https://88c056a8dbc147a4b7c8a9ddbd19f1d3.us-east-1.aws.found.io/s/erpfi/app/kibana#/discover?_a=(columns:!(_source),interval:auto,query:(language:kuery,query:'kubernetes.deployment.name: erpfi-suppliers'),sort:!(!('@timestamp',desc)))"
+      title: "Kibana - non-prod"
+    - url: "https://00389bf2dfea48fda4e5e67b0a08248b.us-east-1.aws.found.io/s/erpfi/app/kibana#/discover?_a=(columns:!(_source),interval:auto,query:(language:kuery,query:'kubernetes.deployment.name: erpfi-suppliers'),sort:!(!('@timestamp',desc)))"
+      title: "Kibana - prod"
+    - url: "https://app.signalfx.com/#/home"
+      title: "SignalFx"
+    - url: "https://nexus-dev-aws.twg.co.nz/#browse/browse:components:erpfi-suppliers"
+      title: "Test results"
+spec:
+  type: service
+  lifecycle: experimental
+  owner: erpfi-team
+  providesApis:
+    - "erpfi-suppliers"
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: erpfi-suppliers
+  description: erpfi-suppliers
+  tags:
+    - rest
+    - template-2021-10-07
+spec:
+  type: openapi
+  lifecycle: experimental
+  owner: erpfi-team
+  definition:
+    $text: ./src/main/resources/openapi/openapi-spec.yaml

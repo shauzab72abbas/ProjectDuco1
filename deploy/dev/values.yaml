@@ -1,0 +1,127 @@
+nameOverride: erpfi-suppliers
+# use command line parameter in pipeline to keep it dynamic per build
+#appVersion: someVersionForApplication
+
+image:
+  repository: 'twgorg/erpfi-suppliers'
+  # tag: use appVersion
+
+replicaCount: 1
+
+extraLabels:
+  metrics: prometheus
+
+podAnnotations:
+  co.elastic.logs/enabled: 'true'
+
+  # product group in elasticsearch to provide same lifecycle policies and patterns
+  twg.elastic.logs/product: "erpfi"
+podLabels:
+
+extraEnvs:
+  - name: ENV
+    value: dev
+  - name: SFTP_PORT
+    value: '22'
+  - name: SFTP_REMOTEDIRECTORY
+    value: /Incoming/Suppliers
+  - name: KAFKA_BOOTSTRAPSERVERS
+    value: pkc-4n66v.australiaeast.azure.confluent.cloud:9092
+  - name: KAFKA_TOPICNAME
+    value: twg.public.erp.supplier.supplier-core-to-be-discarded-v1
+  - name: SFTP_HOST
+    valueFrom:
+      secretKeyRef:
+        name: erpfi-suppliers
+        key: sftpHost
+  - name: SFTP_USERNAME
+    valueFrom:
+      secretKeyRef:
+        name: erpfi-suppliers
+        key: userName
+  - name: SFTP_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: erpfi-suppliers
+        key: userPassword
+  - name: KAFKA_JAASCONFIG
+    valueFrom:
+      secretKeyRef:
+        name: erpfi-suppliers
+        key: jaasConfig
+  - name: PO_EMAIL_VALIDATION_REQUIRED
+    value: 'false'
+
+ingress:
+  host: 'erpfi-dev-aks.twg.co.nz'
+  prefix: '/erpfi-suppliers'
+  stripPrefix: true
+  tls:
+    enabled: true
+
+resources:
+  limits:
+    memory: '512Mi'
+    cpu: '400m'
+  requests:
+    memory: '256Mi'
+    cpu: '100m'
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podSecurityContext: {}
+# fsGroup: 2000
+
+securityContext:
+  # capabilities:
+  #   drop:
+  #   - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 1000
+
+configmap:
+  enabled: false
+
+metrics:
+  enabled: true
+
+livenessProbe:
+  enabled: true
+  override:
+    httpGet:
+      path: /health/liveness
+      port: 8050
+    failureThreshold: 5
+    initialDelaySeconds: 180
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+readinessProbe:
+  enabled: true
+  override:
+    httpGet:
+      path: /health/readiness
+      port: 8050
+    failureThreshold: 5
+    initialDelaySeconds: 180
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+
+service:
+  type: ClusterIP
+  port: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

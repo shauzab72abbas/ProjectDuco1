@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${project.artifactId}
+spec:
+  template:
+    spec:
+      containers:
+        - name: app
+          env:
+            - name: KUBERNETES_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: HOSTNAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: SFTP_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: erpfi-suppliers
+                  key: sftpHost
+            - name: SFTP_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: erpfi-suppliers
+                  key: userName
+            - name: SFTP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: erpfi-suppliers
+                  key: userPassword
+            - name: SFTP_PORT
+              value: 22
+            - name: SFTP_REMOTEDIRECTORY
+              value: /Incoming/Suppliers
+            - name: KAFKA_BOOTSTRAPSERVERS
+              value: pkc-4n66v.australiaeast.azure.confluent.cloud:9092
+            - name: KAFKA_JAASCONFIG
+              valueFrom:
+                secretKeyRef:
+                  name: erpfi-suppliers
+                  key: jaasConfig
+            - name: KAFKA_TOPICNAME
+              value: twg.public.erp.supplier.supplier-core-to-be-discarded-v1
+          image: twgorg/${project.artifactId}:${project.version}
+          livenessProbe:
+            failureThreshold: 24
+            httpGet:
+              path: /health/liveness
+              port: 8050
+              scheme: HTTP
+            initialDelaySeconds: 5
+            successThreshold: 1
+            periodSeconds: 5
+          readinessProbe:
+            failureThreshold: 24
+            httpGet:
+              path: /health/readiness
+              port: 8050
+              scheme: HTTP
+            initialDelaySeconds: 5
+            successThreshold: 1
+            periodSeconds: 5
+          securityContext:
+            privileged: false
+        - name: wiremock
+          image: rodolpheche/wiremock:2.27.2
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 8090
+            - containerPort: 8443
+          args: ["/bin/sh", "-c", "java $JAVA_OPTS -cp /var/wiremock/lib/*:/var/wiremock/extensions/* com.github.tomakehurst.wiremock.standalone.WireMockServerRunner --port 8090"]
